@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+
+{% block styles %}
+<style>
+    /* ================= CSS СТРАНИЦЫ ЛОГИНА ================= */
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        padding: 6.5rem 1.5rem 3rem;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        padding: 2.8rem 2.5rem 2.5rem;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 2.5rem;
+        box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+        transition: transform 0.25s ease;
+    }
+
+    .login-card:hover { transform: translateY(-4px); }
+
+    .login-card h1 {
+        color: #fff;
+        font-weight: 700;
+        font-size: 2rem;
+        letter-spacing: -0.5px;
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+
+    .login-card .sub-head {
+        color: rgba(255, 255, 255, 0.35);
+        text-align: center;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .error-msg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1.2rem;
+        margin-bottom: 1.5rem;
+        border-radius: 60px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .error-msg::before { content: "⚠️"; }
+
+    .login-card form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+    }
+
+    .login-card input {
+        padding: 0.9rem 1.2rem;
+        border: none;
+        border-radius: 60px;
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.95rem;
+        outline: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+        transition: outline 0.25s, background 0.25s, box-shadow 0.25s;
+    }
+
+    .login-card input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+        font-weight: 300;
+        letter-spacing: 0.3px;
+    }
+
+    .login-card input:focus {
+        outline: 2px solid #a78bfa;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15);
+    }
+
+    .login-card button {
+        margin-top: 0.4rem;
+        padding: 0.9rem;
+        border: none;
+        border-radius: 60px;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: #fff;
+        font-family: inherit;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px -6px rgba(109, 40, 217, 0.45);
+        transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .login-card button:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        box-shadow: 0 12px 32px -6px rgba(109, 40, 217, 0.65);
+    }
+
+    .login-card button:active { transform: scale(0.96); }
+
+    .footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .footer p { color: rgba(255, 255, 255, 0.55); font-size: 0.95rem; }
+
+    .footer a {
+        color: #a78bfa;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0.3rem 1.2rem;
+        border-radius: 40px;
+        background: rgba(167, 139, 250, 0.08);
+        border: 1px solid rgba(167, 139, 250, 0.12);
+        transition: background 0.25s, color 0.25s, transform 0.2s;
+    }
+
+    .footer a:hover {
+        background: rgba(167, 139, 250, 0.2);
+        color: #c4b5fd;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 520px) {
+        body { padding: 6rem 1rem 2rem; }
+        .login-card { padding: 2rem 1.5rem; border-radius: 2rem; }
+        .login-card h1 { font-size: 1.7rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-card">
+    <h1>Welcome back</h1>
+    <p class="sub-head">Sign in to your account</p>
+
+    {% if error %}
+        <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">LOGIN</button>
+    </form>
+
+    <div class="footer">
+        <p>Нет аккаунта?</p>
+        <a href="{{ url_for('reg') }}">Регистрация</a>
+    </div>
+</div>
+{% endblock %}

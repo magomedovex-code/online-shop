@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{# Sign in + Create account in one animated component.
+   /login renders mode="login", /register renders mode="register"; each form still posts to its own route. #}
+{% block title %}{{ 'Create account' if mode == 'register' else 'Sign in' }}{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">{% endblock %}
+
+{% block content %}
+<section class="auth" data-auth data-mode="{{ mode }}" data-target="{{ mode }}"
+         data-intro="{{ 'short' if error else 'full' }}"
+         data-login-url="{{ url_for('login') }}" data-register-url="{{ url_for('reg') }}">
+
+  <div class="auth-bg" aria-hidden="true">
+    <div class="auth-grid"></div>
+    <div class="auth-glow"></div>
+    <div class="auth-glow auth-glow--soft"></div>
+  </div>
+
+  <div class="auth-intro" aria-hidden="true"><span class="auth-intro-line"></span></div>
+
+  <div class="auth-stage">
+    <div class="auth-shell gold-border">
+      <span class="auth-sweep" aria-hidden="true"></span>
+
+      <nav class="auth-tabs" aria-label="Account">
+        <a class="auth-tab" href="{{ url_for('login') }}" data-auth-switch="login">Sign in</a>
+        <a class="auth-tab" href="{{ url_for('reg') }}" data-auth-switch="register">Create account</a>
+        <span class="auth-tabs-pill" aria-hidden="true"></span>
+      </nav>
+
+      <div class="auth-forms">
+        {# ---------------- SIGN IN ---------------- #}
+        <div class="auth-pane" data-pane="login" {% if mode != 'login' %}inert{% endif %}>
+          <header class="auth-head">
+            <p class="eyebrow" data-auth-item>Members</p>
+            <h1 class="display auth-title" data-auth-item>Welcome <em>back</em></h1>
+            <p class="auth-sub" data-auth-item>Sign in to your AUREON account.</p>
+          </header>
+
+          {% if error and mode == 'login' %}
+            <div class="alert" role="alert" data-auth-item><svg><use href="#i-alert"/></svg><span>{{ error }}</span></div>
+          {% endif %}
+
+          <form class="auth-form" method="POST" action="{{ url_for('login') }}" data-loading>
+            <div class="field" data-auth-item>
+              <input class="field-input" id="login-name" type="text" name="name" placeholder=" "
+                     autocomplete="username" required
+                     value="{{ request.form.get('name', '') if mode == 'login' else '' }}">
+              <label class="field-label" for="login-name">Username</label>
+              <svg class="field-icon"><use href="#i-user"/></svg>
+              <span class="field-line"></span>
+            </div>
+            <div class="field field--toggle" data-auth-item>
+              <input class="field-input" id="login-password" type="password" name="password" placeholder=" "
+                     autocomplete="current-password" required>
+              <label class="field-label" for="login-password">Password</label>
+              <svg class="field-icon"><use href="#i-lock"/></svg>
+              <button class="field-toggle" type="button" aria-label="Show password" aria-pressed="false" data-toggle-password>
+                <svg class="i-show"><use href="#i-eye"/></svg><svg class="i-hide"><use href="#i-eye-off"/></svg>
+              </button>
+              <span class="field-line"></span>
+            </div>
+            <button class="btn btn--gold btn--block" type="submit" data-auth-item>
+              Sign in <svg><use href="#i-arrow"/></svg>
+            </button>
+          </form>
+
+          <p class="auth-alt" data-auth-item>New to AUREON?<a class="link" href="{{ url_for('reg') }}" data-auth-switch="register">Create an account</a></p>
+        </div>
+
+        {# ---------------- CREATE ACCOUNT ---------------- #}
+        <div class="auth-pane" data-pane="register" {% if mode != 'register' %}inert{% endif %}>
+          <header class="auth-head">
+            <p class="eyebrow" data-auth-item>Membership</p>
+            <h2 class="display auth-title" data-auth-item>Create <em>account</em></h2>
+            <p class="auth-sub" data-auth-item>Join the collection — it takes less than a minute.</p>
+          </header>
+
+          {% if error and mode == 'register' %}
+            <div class="alert" role="alert" data-auth-item><svg><use href="#i-alert"/></svg><span>{{ error }}</span></div>
+          {% endif %}
+
+          <form class="auth-form" method="POST" action="{{ url_for('reg') }}" data-loading>
+            <div class="field" data-auth-item>
+              <input class="field-input" id="register-name" type="text" name="name" placeholder=" "
+                     autocomplete="username" required
+                     value="{{ request.form.get('name', '') if mode == 'register' else '' }}">
+              <label class="field-label" for="register-name">Username</label>
+              <svg class="field-icon"><use href="#i-user"/></svg>
+              <span class="field-line"></span>
+            </div>
+            <div class="field field--toggle" data-auth-item>
+              <input class="field-input" id="register-password" type="password" name="password" placeholder=" "
+                     autocomplete="new-password" required>
+              <label class="field-label" for="register-password">Password</label>
+              <svg class="field-icon"><use href="#i-lock"/></svg>
+              <button class="field-toggle" type="button" aria-label="Show password" aria-pressed="false" data-toggle-password>
+                <svg class="i-show"><use href="#i-eye"/></svg><svg class="i-hide"><use href="#i-eye-off"/></svg>
+              </button>
+              <span class="field-line"></span>
+            </div>
+            <div class="row" data-auth-item>
+              <div class="field">
+                <input class="field-input" id="register-age" type="number" name="age" placeholder=" "
+                       min="1" inputmode="numeric" required
+                       value="{{ request.form.get('age', '') if mode == 'register' else '' }}">
+                <label class="field-label" for="register-age">Age</label>
+                <svg class="field-icon"><use href="#i-calendar"/></svg>
+                <span class="field-line"></span>
+              </div>
+              <div class="field">
+                <input class="field-input" id="register-phone" type="tel" name="phone" placeholder=" "
+                       autocomplete="tel"
+                       value="{{ request.form.get('phone', '') if mode == 'register' else '' }}">
+                <label class="field-label" for="register-phone">Phone (optional)</label>
+                <svg class="field-icon"><use href="#i-phone"/></svg>
+                <span class="field-line"></span>
+              </div>
+            </div>
+            <div class="field" data-auth-item>
+              <input class="field-input" id="register-email" type="email" name="email" placeholder=" "
+                     autocomplete="email" required
+                     value="{{ request.form.get('email', '') if mode == 'register' else '' }}">
+              <label class="field-label" for="register-email">Email address</label>
+              <svg class="field-icon"><use href="#i-mail"/></svg>
+              <span class="field-line"></span>
+            </div>
+            <button class="btn btn--gold btn--block" type="submit" data-auth-item>
+              Create account <svg><use href="#i-arrow"/></svg>
+            </button>
+          </form>
+
+          <p class="auth-alt" data-auth-item>Already a member?<a class="link" href="{{ url_for('login') }}" data-auth-switch="login">Sign in</a></p>
+        </div>
+      </div>
+
+      {# ---------------- GOLD-LIT OVERLAY (desktop) ---------------- #}
+      <div class="auth-overlay">
+        <div class="auth-overlay-bg" aria-hidden="true">
+          <img class="auth-overlay-img" src="https://images.unsplash.com/photo-1749544811778-7035447305d4?auto=format&fit=crop&w=1100&q=80" alt="" decoding="async">
+          <span class="auth-blade"></span>
+          <span class="auth-overlay-shade"></span>
+        </div>
+
+        <div class="auth-overlay-content" data-overlay="login" {% if mode != 'login' %}inert{% endif %}>
+          <svg class="logo-mark" data-auth-item aria-hidden="true"><use href="#logo-mark"/></svg>
+          <p class="eyebrow" data-auth-item>New to Aureon</p>
+          <h2 class="display" data-auth-item>Step into the <em>collection</em></h2>
+          <p data-auth-item>Create your membership and keep your profile in one elegant place.</p>
+          <a class="btn btn--ghost" href="{{ url_for('reg') }}" data-auth-switch="register" data-auth-item>
+            Create account <svg><use href="#i-arrow"/></svg>
+          </a>
+        </div>
+
+        <div class="auth-overlay-content" data-overlay="register" {% if mode != 'register' %}inert{% endif %}>
+          <svg class="logo-mark" data-auth-item aria-hidden="true"><use href="#logo-mark"/></svg>
+          <p class="eyebrow" data-auth-item>Already a member</p>
+          <h2 class="display" data-auth-item>Welcome <em>back</em></h2>
+          <p data-auth-item>Sign in to return to your profile and the collection.</p>
+          <a class="btn btn--ghost" href="{{ url_for('login') }}" data-auth-switch="login" data-auth-item>
+            Sign in <svg><use href="#i-arrow"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>{% endblock %}

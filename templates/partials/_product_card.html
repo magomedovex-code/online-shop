@@ -1,0 +1,20 @@
+{# One product card. Expects `p` (a Products row). Used on Home and Collection. #}
+{% set has_pic = p.pic and 'no-image-icon' not in p.pic %}
+<article class="product-card" data-tilt="5">
+  <div class="product-media{% if not has_pic %} is-empty{% endif %}">
+    <div class="product-placeholder"><svg><use href="#logo-mark"/></svg></div>
+    {% if has_pic %}
+      <img src="{{ p.pic }}" alt="{{ p.product }}" loading="lazy" decoding="async"
+           onerror="this.parentElement.classList.add('is-empty')">
+    {% endif %}
+    <span class="badge product-stock">{{ p.amount or 0 }} in stock</span>
+  </div>
+  <div class="product-body">
+    <h3 class="product-name">{{ p.product }}</h3>
+    <p class="product-desc">{{ p.description }}</p>
+    <div class="product-foot">
+      <span class="product-price">{{ "{:,}".format(p.price or 0).replace(",", " ") }}<small>₽</small></span>
+      <a href="/karzinu" class="btn btn--ghost btn--sm">Add to cart</a>
+    </div>
+  </div>
+</article>

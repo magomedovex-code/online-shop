@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<section class="page">
+  <div class="container profile-grid">
+    {# Membership card built from the account's real data #}
+    <div data-reveal="scale">
+      <div class="member-card" data-tilt="10">
+        <span class="mc-sheen" aria-hidden="true"></span>
+        <div class="mc-top">
+          <span class="mc-brand"><svg><use href="#logo-mark"/></svg>AUREON</span>
+          <span class="badge {{ 'badge--gold' if user.is_admin == 1 else 'badge--outline' }}">{{ 'Administrator' if user.is_admin == 1 else 'Member' }}</span>
+        </div>
+        <div class="mc-chip" aria-hidden="true"></div>
+        <div class="mc-number">AUR &middot; {{ '%04d' % user.id }}</div>
+        <div class="mc-bottom">
+          <div><small>Member</small><strong>{{ user.name }}</strong></div>
+          <div><small>Age</small><strong>{{ user.age }}</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-copy">
+      <p class="eyebrow" data-reveal>Your profile</p>
+      <h1 class="display" data-split>Welcome, <em>{{ user.name }}</em></h1>
+
+      <dl class="detail-list" data-stagger>
+        <div class="detail-row"><dt>ID</dt><dd class="mono">{{ user.id }}</dd></div>
+        <div class="detail-row"><dt>Name</dt><dd>{{ user.name }}</dd></div>
+        <div class="detail-row"><dt>Age</dt><dd>{{ user.age }}</dd></div>
+        <div class="detail-row"><dt>Email</dt><dd>{{ user.email }}</dd></div>
+        <div class="detail-row"><dt>Phone</dt>
+          {% if user.phone %}<dd>{{ user.phone }}</dd>{% else %}<dd class="is-empty">Not provided</dd>{% endif %}
+        </div>
+        <div class="detail-row"><dt>Role</dt><dd>{{ 'Administrator' if user.is_admin == 1 else 'Member' }}</dd></div>
+      </dl>
+
+      <div class="profile-actions" data-reveal>
+        <a class="btn btn--gold" href="{{ url_for('show_products') }}" data-magnetic>Browse the collection <svg><use href="#i-arrow"/></svg></a>
+        {% if user.is_admin == 1 %}
+          <a class="btn btn--ghost" href="{{ url_for('admin') }}" data-magnetic>Admin panel</a>
+        {% endif %}
+        <a class="btn btn--ghost" href="{{ url_for('logout') }}" data-magnetic>Sign out</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

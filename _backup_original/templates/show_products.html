@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block title %}Все товары{% endblock %}
+
+{% block styles %}
+<style>
+    /* ================= CSS СТРАНИЦЫ ТОВАРОВ ================= */
+    body {
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        padding: 6.5rem 1.5rem 3rem;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2.2rem 2.2rem 2rem;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 2.5rem;
+        box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+    }
+
+    .title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.8rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .title-row h1 {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .add-link {
+        padding: 0.55rem 1.3rem;
+        border-radius: 60px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: background 0.25s, transform 0.15s;
+    }
+
+    .add-link:hover { background: rgba(255, 255, 255, 0.14); transform: translateY(-1px); }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .product-card {
+        display: flex;
+        flex-direction: column;
+        padding: 1.2rem 1.2rem 1.4rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 1.5rem;
+        transition: transform 0.25s, border-color 0.25s, background 0.25s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(167, 139, 250, 0.45);
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+    .product-image {
+        aspect-ratio: 1 / 0.9;
+        margin-bottom: 1rem;
+        border-radius: 1rem;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.25);
+    }
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image img { transform: scale(1.05); }
+
+    .product-name {
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    .product-description {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 0.9rem;
+        flex: 1;
+    }
+
+    .product-price {
+        color: #34d399;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .product-price::after {
+        content: " ₽";
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.55);
+    }
+
+    .add-to-cart {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        width: fit-content;
+        margin-top: auto;
+        padding: 0.6rem 1.3rem;
+        border-radius: 60px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        box-shadow: 0 8px 20px -8px rgba(109, 40, 217, 0.6);
+        transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .add-to-cart:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        box-shadow: 0 12px 26px -8px rgba(109, 40, 217, 0.8);
+    }
+
+    .add-to-cart:active { transform: scale(0.96); }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        padding: 3rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px dashed rgba(255, 255, 255, 0.08);
+        border-radius: 1.5rem;
+    }
+
+    @media (max-width: 520px) {
+        body { padding: 6rem 1rem 2rem; }
+        .container { padding: 1.5rem 1.2rem; border-radius: 2rem; }
+        .title-row h1 { font-size: 1.6rem; }
+        .product-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="title-row">
+        <h1>📦 Все товары</h1>
+        <a class="add-link" href="{{ url_for('add_product') }}">+ Добавить товар</a>
+    </div>
+
+    <div class="product-grid">
+        {% for p in products %}
+            <div class="product-card">
+                <div class="product-image"><img src="{{ p.pic }}" alt="{{ p.product }}"></div>
+                <div class="product-name">{{ p.product }}</div>
+                <div class="product-description">{{ p.description }}</div>
+                <div class="product-price">{{ p.price }}</div>
+                <a href="/karzinu" class="add-to-cart">🛒 В корзину</a>
+            </div>
+        {% else %}
+            <div class="empty-state">Пока нет ни одного товара</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

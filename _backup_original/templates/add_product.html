@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Добавить товар{% endblock %}
+
+{% block styles %}
+<style>
+    /* ================= CSS СТРАНИЦЫ ДОБАВЛЕНИЯ ТОВАРА ================= */
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        padding: 6.5rem 1.5rem 3rem;
+    }
+
+    .add-card {
+        width: 100%;
+        max-width: 620px;
+        padding: 2.8rem 2.5rem 2.5rem;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 2.5rem;
+        box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+        transition: transform 0.25s ease;
+    }
+
+    .add-card:hover { transform: translateY(-4px); }
+
+    .add-card h1 {
+        color: #fff;
+        font-weight: 700;
+        font-size: 2rem;
+        letter-spacing: -0.5px;
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+
+    .add-card .sub-head {
+        color: rgba(255, 255, 255, 0.35);
+        text-align: center;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .add-card form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.1rem;
+    }
+
+    /* поля на всю ширину */
+    .add-card input[name="pic"],
+    .add-card input[name="product"],
+    .add-card input[name="description"],
+    .add-card button {
+        grid-column: 1 / -1;
+    }
+
+    .add-card input {
+        padding: 0.9rem 1.2rem;
+        border: none;
+        border-radius: 60px;
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.95rem;
+        outline: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+        transition: outline 0.25s, background 0.25s, box-shadow 0.25s;
+    }
+
+    .add-card input::placeholder {
+        color: rgba(255, 255, 255, 0.35);
+        font-weight: 300;
+        letter-spacing: 0.3px;
+    }
+
+    .add-card input:focus {
+        outline: 2px solid #a78bfa;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15);
+    }
+
+    .add-card input[type="number"]::-webkit-inner-spin-button,
+    .add-card input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .add-card input[type="number"] { -moz-appearance: textfield; }
+
+    .add-card button {
+        margin-top: 0.4rem;
+        padding: 0.9rem;
+        border: none;
+        border-radius: 60px;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: #fff;
+        font-family: inherit;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px -6px rgba(109, 40, 217, 0.45);
+        transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .add-card button:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        box-shadow: 0 12px 32px -6px rgba(109, 40, 217, 0.65);
+    }
+
+    .add-card button:active { transform: scale(0.96); }
+
+    .footnote {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.35);
+    }
+
+    .footer {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.2rem;
+    }
+
+    .footer a {
+        color: #a78bfa;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0.3rem 1.2rem;
+        border-radius: 40px;
+        background: rgba(167, 139, 250, 0.08);
+        border: 1px solid rgba(167, 139, 250, 0.12);
+        transition: background 0.25s, color 0.25s, transform 0.2s;
+    }
+
+    .footer a:hover {
+        background: rgba(167, 139, 250, 0.2);
+        color: #c4b5fd;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 520px) {
+        body { padding: 6rem 1rem 2rem; }
+        .add-card { padding: 2rem 1.5rem; border-radius: 2rem; }
+        .add-card h1 { font-size: 1.7rem; }
+        .add-card form { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="add-card">
+    <h1>Додати товар</h1>
+    <p class="sub-head">Заповни картку нового товару</p>
+
+    <form method="POST" novalidate>
+        <input type="text" name="pic" placeholder="Посилання на зображення" required aria-label="Посилання на зображення">
+        <input type="text" name="product" placeholder="Назва товару" required aria-label="Назва товару">
+        <input type="number" name="amount" placeholder="Кількість" required aria-label="Кількість" min="0">
+        <input type="number" name="price" placeholder="Ціна" required aria-label="Ціна" step="0.01" min="0">
+        <input type="text" name="description" placeholder="Опис товару" required aria-label="Опис">
+        <button type="submit">Додати товар</button>
+    </form>
+
+    <div class="footnote">✦ усі поля обов'язкові</div>
+
+    <div class="footer">
+        <a href="{{ url_for('show_products') }}">← До списку товарів</a>
+    </div>
+</div>
+{% endblock %}

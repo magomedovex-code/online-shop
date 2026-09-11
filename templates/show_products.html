@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Collection{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="page-hero-media" aria-hidden="true">
+    <img class="parallax-img" data-parallax="10"
+         src="https://images.unsplash.com/photo-1709377195538-5522ed0f9e10?auto=format&fit=crop&w=2000&q=80"
+         alt="" decoding="async">
+  </div>
+  <div class="container page-hero-row">
+    <div>
+      <p class="eyebrow" data-reveal>The collection</p>
+      <h1 class="display page-title" data-split>Pieces of <em>distinction</em></h1>
+      <p class="lead" data-reveal>
+        {% if products %}{{ products|length }} {{ 'piece' if products|length == 1 else 'pieces' }} currently in the collection — each listed by hand, priced plainly.{% else %}The collection is being prepared.{% endif %}
+      </p>
+    </div>
+    {% if current_user and current_user.is_admin == 1 %}
+      <a class="btn btn--gold" href="{{ url_for('add_product') }}" data-reveal data-magnetic>Add product <svg><use href="#i-arrow"/></svg></a>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="product-grid" data-stagger>
+      {% for p in products %}
+        {% include "partials/_product_card.html" %}
+      {% else %}
+        <div class="empty-state">
+          <svg><use href="#logo-mark"/></svg>
+          <h3>No pieces yet</h3>
+          <p>The first pieces will appear here as soon as they are listed.</p>
+          {% if current_user and current_user.is_admin == 1 %}
+            <a class="btn btn--gold btn--sm" href="{{ url_for('add_product') }}">Add the first piece</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

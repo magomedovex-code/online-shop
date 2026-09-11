@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block title %}The gold standard{% endblock %}
+
+{% block content %}
+{# ================= HERO ================= #}
+<section class="hero" data-hero>
+  <div class="hero-media">
+    <img src="https://images.unsplash.com/photo-1741356474365-5f0041f89eaa?auto=format&fit=crop&w=2000&q=80"
+         alt="" fetchpriority="high" decoding="async">
+  </div>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-lines" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+
+  <div class="container hero-inner">
+    <p class="eyebrow" data-hero-in>Maison Aureon — Curated collection</p>
+    <h1 class="display hero-title" data-split>The gold standard of <em>modern</em> luxury.</h1>
+    <p class="lead hero-lead" data-hero-in>
+      Distinctive pieces, chosen with the precision of an instrument and presented with the calm of a private gallery.
+    </p>
+    <div class="hero-actions" data-hero-in>
+      <a class="btn btn--gold" href="{{ url_for('show_products') }}" data-magnetic>
+        Explore the collection <svg><use href="#i-arrow"/></svg>
+      </a>
+      {% if current_user %}
+        <a class="btn btn--ghost" href="{{ url_for('profile') }}" data-magnetic>Your profile</a>
+      {% else %}
+        <a class="btn btn--ghost" href="{{ url_for('reg') }}" data-magnetic>Become a member</a>
+      {% endif %}
+    </div>
+
+    <aside class="glass hero-panel" data-hero-in aria-label="Catalogue overview">
+      <div class="hero-panel-head"><span><i class="dot"></i> Live catalogue</span>AUR</div>
+      {% if product_count %}
+        <div class="hero-panel-row">Pieces <strong>{{ product_count }}</strong></div>
+        <div class="hero-panel-row">Units in stock <strong>{{ "{:,}".format(stock_total).replace(",", " ") }}</strong></div>
+        <div class="hero-panel-row">Members <strong>{{ member_count }}</strong></div>
+      {% else %}
+        <p>The first pieces are being curated. Create an account to be here when the collection opens.</p>
+      {% endif %}
+    </aside>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">Scroll<i></i></div>
+</section>
+
+{# ================= TICKER ================= #}
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    {% for _ in range(2) %}
+      {% if ticker %}
+        {% for p in ticker %}
+          <span class="ticker-item">{{ p.product }} <b>{{ "{:,}".format(p.price or 0).replace(",", " ") }} ₽</b></span>
+        {% endfor %}
+      {% else %}
+        {% for word in ["Precision", "Craft", "Discretion", "Heritage", "Excellence", "Detail"] %}
+          <span class="ticker-item">{{ word }}</span>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{# ================= MANIFESTO ================= #}
+<section class="section">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Our philosophy</p>
+    <p class="manifesto-text" data-words>
+      Every piece we list is chosen with the precision of an instrument and the patience of a craftsman — so what you find here is not simply bought, but kept.
+    </p>
+  </div>
+</section>
+
+{# ================= FEATURED COLLECTION ================= #}
+<section class="section section--flush-top">
+  <div class="container">
+    <div class="gold-rule" data-line></div>
+    <header class="section-head">
+      <div>
+        <p class="eyebrow" data-reveal>The collection</p>
+        <h2 class="display section-title" data-split>Recently <em>curated</em></h2>
+      </div>
+      <a class="link" href="{{ url_for('show_products') }}" data-reveal>View all pieces <svg><use href="#i-arrow"/></svg></a>
+    </header>
+
+    <div class="product-grid" data-stagger>
+      {% for p in featured %}
+        {% include "partials/_product_card.html" %}
+      {% else %}
+        <div class="empty-state">
+          <svg><use href="#logo-mark"/></svg>
+          <h3>The vault is being prepared</h3>
+          <p>No pieces have been listed yet. New arrivals will appear here the moment they are added.</p>
+          {% if current_user and current_user.is_admin == 1 %}
+            <a class="btn btn--gold btn--sm" href="{{ url_for('add_product') }}">Add the first piece</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{# ================= PILLARS ================= #}
+<section class="section">
+  <div class="container pillars-grid">
+    <div class="pillars-media" aria-hidden="true">
+      <figure class="pillar-img is-active" data-pillar-img>
+        <img src="https://images.unsplash.com/photo-1610897534349-7759782118b9?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" decoding="async">
+        <figcaption class="pillar-caption">01 — Curated</figcaption>
+      </figure>
+      <figure class="pillar-img" data-pillar-img>
+        <img src="https://images.unsplash.com/photo-1627823569857-4d8581dc62b2?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" decoding="async">
+        <figcaption class="pillar-caption">02 — Private</figcaption>
+      </figure>
+      <figure class="pillar-img" data-pillar-img>
+        <img src="https://images.unsplash.com/photo-1647738236657-4994defde1cc?auto=format&fit=crop&w=1200&q=80" alt="" loading="lazy" decoding="async">
+        <figcaption class="pillar-caption">03 — Precise</figcaption>
+      </figure>
+    </div>
+
+    <div class="pillars-list">
+      <article class="pillar is-active" data-pillar>
+        <div class="pillar-mobile-img"><img src="https://images.unsplash.com/photo-1610897534349-7759782118b9?auto=format&fit=crop&w=900&q=75" alt="Black and gold wristwatch" loading="lazy"></div>
+        <span class="pillar-num">01 / 03</span>
+        <h3>A curated catalogue</h3>
+        <p>Every piece is listed by hand by our team — with its own description, a clear price and live stock, so the collection stays small, deliberate and honest.</p>
+      </article>
+      <article class="pillar" data-pillar>
+        <div class="pillar-mobile-img"><img src="https://images.unsplash.com/photo-1627823569857-4d8581dc62b2?auto=format&fit=crop&w=900&q=75" alt="Perfume bottle in warm shadow" loading="lazy"></div>
+        <span class="pillar-num">02 / 03</span>
+        <h3>Private membership</h3>
+        <p>Create your account in a minute and keep your details in one personal profile — always one sign-in away.</p>
+      </article>
+      <article class="pillar" data-pillar>
+        <div class="pillar-mobile-img"><img src="https://images.unsplash.com/photo-1647738236657-4994defde1cc?auto=format&fit=crop&w=900&q=75" alt="Close-up of a watch on a black background" loading="lazy"></div>
+        <span class="pillar-num">03 / 03</span>
+        <h3>Precision in every detail</h3>
+        <p>Exact quantities, transparent prices and nothing hidden. What you see on a piece is exactly what is in the collection.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+{# ================= ABOUT ================= #}
+<section class="section">
+  <div class="container about-grid">
+    <figure class="about-media" data-reveal="scale">
+      <div class="about-frame" aria-hidden="true"></div>
+      <div class="about-img">
+        <img class="parallax-img" data-parallax="7"
+             src="https://images.unsplash.com/photo-1693213085235-ea6deadf8cee?auto=format&fit=crop&w=1200&q=80"
+             alt="Diamond earrings on black velvet" loading="lazy" decoding="async">
+      </div>
+    </figure>
+
+    <div class="about-copy">
+      <p class="eyebrow" data-reveal>About Aureon</p>
+      <h2 class="display" data-split>Where luxury meets <em>precision</em>.</h2>
+      <p class="lead" data-reveal>
+        AUREON was built around a simple idea: fewer things, chosen better. Black for focus, gold for what deserves attention.
+      </p>
+      <p class="lead" data-reveal>
+        Behind the calm surface is a precise system — every listing, price and unit in stock is kept exact, so browsing feels as considered as the pieces themselves.
+      </p>
+      <dl class="stats" data-reveal>
+        <div class="stat"><dt>Pieces listed</dt><dd data-count="{{ product_count }}">{{ product_count }}</dd></div>
+        <div class="stat"><dt>Units in stock</dt><dd data-count="{{ stock_total }}">{{ "{:,}".format(stock_total).replace(",", " ") }}</dd></div>
+        <div class="stat"><dt>Members</dt><dd data-count="{{ member_count }}">{{ member_count }}</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{# ================= CTA ================= #}
+<section class="cta" data-cta>
+  <div class="cta-frame">
+    <div class="cta-media" aria-hidden="true">
+      <img src="https://images.unsplash.com/photo-1761437855598-011cf89b2ad4?auto=format&fit=crop&w=2000&q=80" alt="" loading="lazy" decoding="async">
+    </div>
+    <div class="cta-inner">
+      <p class="eyebrow" data-reveal>{{ 'Welcome back' if current_user else 'Membership' }}</p>
+      {% if current_user %}
+        <h2 class="display cta-title" data-split>The collection is <em>waiting</em>.</h2>
+        <p class="lead" data-reveal>Pick up where you left off — new pieces appear here as soon as they are listed.</p>
+        <div class="hero-actions" data-reveal>
+          <a class="btn btn--gold" href="{{ url_for('show_products') }}" data-magnetic>Browse the collection <svg><use href="#i-arrow"/></svg></a>
+        </div>
+      {% else %}
+        <h2 class="display cta-title" data-split>Enter the <em>inner circle</em>.</h2>
+        <p class="lead" data-reveal>One account, one profile, the entire collection. Joining takes less than a minute.</p>
+        <div class="hero-actions" data-reveal>
+          <a class="btn btn--gold" href="{{ url_for('reg') }}" data-magnetic>Create account <svg><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="{{ url_for('login') }}" data-magnetic>Sign in</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

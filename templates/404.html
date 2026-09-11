@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+<section class="page-hero not-found">
+  <div class="container">
+    <p class="eyebrow" data-reveal>Error 404</p>
+    <h1 class="display page-title" data-split>This page is <em>not here</em>.</h1>
+    <p class="lead" data-reveal>The page you are looking for doesn't exist or has moved.</p>
+    <div class="hero-actions" data-reveal>
+      <a class="btn btn--gold" href="{{ url_for('index') }}" data-magnetic>Back to home <svg><use href="#i-arrow"/></svg></a>
+      <a class="btn btn--ghost" href="{{ url_for('show_products') }}" data-magnetic>View the collection</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

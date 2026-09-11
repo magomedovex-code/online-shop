@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Профиль{% endblock %}
+
+{% block styles %}
+<style>
+    /* ================= CSS СТРАНИЦЫ ПРОФИЛЯ ================= */
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+        padding: 6.5rem 1.5rem 3rem;
+    }
+
+    .profile-card {
+        width: 100%;
+        max-width: 480px;
+        padding: 2.8rem 2.8rem 2.5rem;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 2.5rem;
+        box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+        transition: transform 0.25s ease;
+    }
+
+    .profile-card:hover { transform: translateY(-4px); }
+
+    .profile-card h1 {
+        color: #fff;
+        font-weight: 700;
+        font-size: 2.2rem;
+        letter-spacing: -0.5px;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-card .sub-head {
+        color: rgba(255, 255, 255, 0.35);
+        text-align: center;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        padding: 0.6rem 1.2rem;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 60px;
+        transition: background 0.2s ease;
+    }
+
+    .info-item:hover { background: rgba(255, 255, 255, 0.08); }
+
+    .info-item .label {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+        letter-spacing: 0.3px;
+    }
+
+    .info-item .value {
+        color: #fff;
+        font-weight: 500;
+        font-size: 1rem;
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+    }
+
+    .info-item .value.optional {
+        color: rgba(255, 255, 255, 0.5);
+        font-style: italic;
+        font-weight: 300;
+    }
+
+    .badge-admin {
+        display: inline-block;
+        padding: 0.2rem 0.7rem;
+        border-radius: 40px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #6ee7b7;
+        background: rgba(52, 211, 153, 0.15);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+    }
+
+    .profile-card hr {
+        border: 0;
+        height: 1px;
+        margin: 1.8rem 0;
+        background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.35), transparent);
+    }
+
+    .logout-wrapper { display: flex; justify-content: center; }
+
+    .logout-wrapper a {
+        display: inline-block;
+        padding: 0.8rem 2.8rem;
+        border-radius: 60px;
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 8px 24px -6px rgba(185, 28, 28, 0.45);
+        transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .logout-wrapper a:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+        box-shadow: 0 12px 32px -6px rgba(185, 28, 28, 0.65);
+    }
+
+    .logout-wrapper a:active { transform: scale(0.96); }
+
+    @media (max-width: 520px) {
+        body { padding: 6rem 1rem 2rem; }
+        .profile-card { padding: 2rem 1.5rem; border-radius: 2rem; }
+        .profile-card h1 { font-size: 1.8rem; }
+        .info-item { flex-wrap: wrap; }
+        .info-item .value { max-width: 100%; width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <h1>Profile</h1>
+    <p class="sub-head">Your personal details</p>
+
+    <div class="info-list">
+        <div class="info-item">
+            <span class="label">ID</span>
+            <span class="value">{{ user.id }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Name</span>
+            <span class="value">{{ user.name }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Age</span>
+            <span class="value">{{ user.age }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Email</span>
+            <span class="value">{{ user.email }}</span>
+        </div>
+        <div class="info-item">
+            <span class="label">Phone</span>
+            <span class="value {% if not user.phone %}optional{% endif %}">
+                {% if user.phone %}{{ user.phone }}{% else %}Not inputed{% endif %}
+            </span>
+        </div>
+        {% if user.is_admin == 1 %}
+        <div class="info-item">
+            <span class="label">Role</span>
+            <span class="value"><span class="badge-admin">ADMIN</span></span>
+        </div>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <div class="logout-wrapper">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+{% endblock %}

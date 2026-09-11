@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}мой сайт{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ===== CSS только для ШАПКИ (общий для всех страниц) ===== -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .site-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 900;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            background: rgba(15, 12, 41, 0.72);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.9);
+        }
+
+        .site-header::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa 45%, #38bdf8);
+        }
+
+        .hd-inner {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hd-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: .65rem;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: -.02em;
+        }
+
+        .hd-mark {
+            width: 36px; height: 36px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            box-shadow: 0 8px 18px -8px rgba(109, 40, 217, .9);
+            transition: transform .25s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        .hd-logo:hover .hd-mark { transform: rotate(-8deg) scale(1.06); }
+
+        .hd-logo small {
+            display: block;
+            font-size: .68rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .hd-nav {
+            display: flex;
+            align-items: center;
+            gap: .25rem;
+            margin-left: auto;
+        }
+
+        .hd-link {
+            position: relative;
+            padding: .55rem .9rem;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.55);
+            text-decoration: none;
+            font-size: .92rem;
+            font-weight: 600;
+            transition: color .2s, background .2s;
+        }
+
+        .hd-link::after {
+            content: "";
+            position: absolute;
+            left: 50%; bottom: .28rem;
+            width: 0; height: 2px;
+            border-radius: 2px;
+            background: #a78bfa;
+            transform: translateX(-50%);
+            transition: width .25s ease;
+        }
+
+        .hd-link:hover { color: #fff; background: rgba(167, 139, 250, .1); }
+        .hd-link:hover::after,
+        .hd-link.is-active::after { width: 18px; }
+        .hd-link.is-active { color: #fff; background: rgba(167, 139, 250, .16); }
+
+        .hd-actions {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-left: .75rem;
+            padding-left: .9rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hd-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: .55rem 1.15rem;
+            border-radius: 60px;
+            font-size: .88rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #fff;
+            white-space: nowrap;
+            transition: transform .15s, background .25s, box-shadow .25s;
+        }
+
+        .hd-btn-ghost {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hd-btn-ghost:hover { background: rgba(255, 255, 255, 0.14); }
+
+        .hd-btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            box-shadow: 0 8px 20px -8px rgba(109, 40, 217, .8);
+        }
+        .hd-btn-primary:hover { box-shadow: 0 12px 26px -8px rgba(109, 40, 217, 1); }
+
+        .hd-btn:hover { transform: translateY(-1px); }
+        .hd-btn:active { transform: scale(.96); }
+
+        /* бургер без JS */
+        .hd-toggle { display: none; }
+
+        .hd-burger {
+            display: none;
+            margin-left: auto;
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hd-burger i,
+        .hd-burger i::before,
+        .hd-burger i::after {
+            content: "";
+            display: block;
+            width: 18px; height: 2px;
+            border-radius: 2px;
+            background: #fff;
+            transition: transform .25s, background .2s;
+        }
+        .hd-burger i::before { transform: translateY(-6px); }
+        .hd-burger i::after  { transform: translateY(4px); }
+
+        @media (max-width: 820px) {
+            .hd-burger { display: grid; }
+
+            .hd-nav {
+                position: absolute;
+                top: 72px; left: 0; right: 0;
+                flex-direction: column;
+                align-items: stretch;
+                gap: .35rem;
+                margin: 0;
+                padding: 1rem 1.25rem 1.25rem;
+                background: rgba(15, 12, 41, .97);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 24px 40px -24px rgba(0, 0, 0, .9);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: opacity .22s, transform .22s, visibility .22s;
+            }
+
+            .hd-toggle:checked ~ .hd-nav {
+                opacity: 1; visibility: visible; transform: translateY(0);
+            }
+            .hd-toggle:checked ~ .hd-burger i { background: transparent; }
+            .hd-toggle:checked ~ .hd-burger i::before { transform: translateY(0) rotate(45deg); }
+            .hd-toggle:checked ~ .hd-burger i::after  { transform: translateY(-2px) rotate(-45deg); }
+
+            .hd-link { padding: .7rem .8rem; }
+            .hd-link::after { display: none; }
+
+            .hd-actions {
+                flex-direction: column;
+                align-items: stretch;
+                margin: .4rem 0 0;
+                padding: .6rem 0 0;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .hd-logo small { display: none; }
+        }
+    </style>
+
+    <!-- ===== СЮДА КАЖДАЯ СТРАНИЦА КЛАДЁТ СВОЙ СОБСТВЕННЫЙ CSS ===== -->
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+<header class="site-header">
+    <div class="hd-inner">
+        <a class="hd-logo" href="{{ url_for('show_products') }}">
+            <span class="hd-mark">&#9670;</span>
+            <span>SHOP<small>мой магазин</small></span>
+        </a>
+
+        <input type="checkbox" id="hd-toggle" class="hd-toggle">
+        <label class="hd-burger" for="hd-toggle" aria-label="Меню"><i></i></label>
+
+        <nav class="hd-nav">
+            <a class="hd-link {% if request.path == '/show_products' %}is-active{% endif %}" href="{{ url_for('show_products') }}">Товары</a>
+            {% if session.get('user_id') %}
+                <a class="hd-link {% if request.path == '/profile' %}is-active{% endif %}" href="{{ url_for('profile') }}">Профиль</a>
+                {% if user is defined and user and user.is_admin == 1 %}
+                    <a class="hd-link {% if request.path.startswith('/admin') %}is-active{% endif %}" href="{{ url_for('admin') }}">Админ</a>
+                    <a class="hd-link {% if request.path == '/add_product' %}is-active{% endif %}" href="{{ url_for('add_product') }}">Добавить товар</a>
+                {% endif %}
+                <div class="hd-actions">
+                    <a class="hd-btn hd-btn-ghost" href="{{ url_for('logout') }}">Выйти</a>
+                </div>
+            {% else %}
+                <div class="hd-actions">
+                    <a class="hd-btn hd-btn-ghost" href="{{ url_for('login') }}">Войти</a>
+                    <a class="hd-btn hd-btn-primary" href="{{ url_for('reg') }}">Регистрация</a>
+                </div>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

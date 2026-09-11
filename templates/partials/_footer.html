@@ -1,0 +1,41 @@
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="AUREON home">
+        <svg class="brand-mark"><use href="#logo-mark"/></svg>
+        <span class="brand-word">AUREON</span>
+      </a>
+      <p>A curated collection of distinctive pieces — presented in black, gold and precise detail.</p>
+    </div>
+
+    <nav class="footer-col" aria-label="Explore">
+      <h2>Explore</h2>
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('show_products') }}">Collection</a>
+      {% if current_user and current_user.is_admin == 1 %}
+        <a href="{{ url_for('admin') }}">Admin panel</a>
+      {% endif %}
+    </nav>
+
+    <nav class="footer-col" aria-label="Account">
+      <h2>Account</h2>
+      {% if current_user %}
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Sign out</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Sign in</a>
+        <a href="{{ url_for('reg') }}">Create account</a>
+      {% endif %}
+    </nav>
+  </div>
+
+  <div class="footer-word" aria-hidden="true">
+    <span class="footer-word-outline">AUREON</span>
+    <span class="footer-word-fill" data-footer-fill>AUREON</span>
+  </div>
+
+  <div class="container footer-bottom">
+    <span>&copy; {{ current_year }} AUREON</span>
+    <span>Luxury &middot; Technology &middot; Precision</span>
+  </div>
+</footer>

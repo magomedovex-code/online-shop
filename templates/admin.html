@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Admin panel{% endblock %}
+
+{% block content %}
+{% set totals = namespace(units=0, value=0) %}
+{% for p in products %}
+  {% set totals.units = totals.units + (p.amount or 0) %}
+  {% set totals.value = totals.value + (p.amount or 0) * (p.price or 0) %}
+{% endfor %}
+
+<section class="page-hero">
+  <div class="container page-hero-row">
+    <div>
+      <p class="eyebrow" data-reveal>Control room</p>
+      <h1 class="display page-title" data-split>Admin <em>panel</em></h1>
+      <p class="lead" data-reveal>Every member and every piece in the collection, in one place.</p>
+    </div>
+    <a class="btn btn--gold" href="{{ url_for('add_product') }}" data-reveal data-magnetic>Add product <svg><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="container">
+    <div class="stat-grid" data-stagger>
+      <div class="glass stat-tile"><span>Members</span><strong data-count="{{ users|length }}">{{ users|length }}</strong></div>
+      <div class="glass stat-tile"><span>Administrators</span><strong data-count="{{ users|selectattr('is_admin', 'equalto', 1)|list|length }}">{{ users|selectattr('is_admin', 'equalto', 1)|list|length }}</strong></div>
+      <div class="glass stat-tile"><span>Products</span><strong data-count="{{ products|length }}">{{ products|length }}</strong></div>
+      <div class="glass stat-tile"><span>Units in stock</span><strong data-count="{{ totals.units }}">{{ totals.units }}</strong></div>
+      <div class="glass stat-tile"><span>Stock value, ₽</span><strong data-count="{{ totals.value }}">{{ "{:,}".format(totals.value).replace(",", " ") }}</strong></div>
+    </div>
+
+    <div class="glass panel" data-reveal>
+      <div class="panel-head">
+        <h2>Members</h2>
+        <span class="badge badge--outline">{{ users|length }} total</span>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Age</th><th>Password</th><th>Email</th><th>Phone</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            {% for u in users %}
+              <tr>
+                <td class="num">{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td class="num">{{ u.age }}</td>
+                <td><span class="secret" tabindex="0" title="Hover or focus to reveal">{{ u.password }}</span></td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.phone or '—' }}</td>
+                <td>
+                  {% if u.is_admin %}<span class="badge badge--gold">Admin</span>{% else %}<span class="badge">Member</span>{% endif %}
+                </td>
+              </tr>
+            {% else %}
+              <tr><td class="table-empty" colspan="7">No members yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="glass panel" data-reveal>
+      <div class="panel-head">
+        <h2>Products</h2>
+        <span class="badge badge--outline">{{ products|length }} total</span>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>ID</th><th>Product</th><th>Amount</th><th>Price</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+              <tr>
+                <td class="num">{{ product.id }}</td>
+                <td>
+                  <span class="cell-product">
+                    {% if product.pic and 'no-image-icon' not in product.pic %}
+                      <img class="thumb" src="{{ product.pic }}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+                    {% else %}
+                      <svg class="thumb"><use href="#logo-mark"/></svg>
+                    {% endif %}
+                    {{ product.product }}
+                  </span>
+                </td>
+                <td class="num">{{ product.amount }}</td>
+                <td class="price">{{ "{:,}".format(product.price or 0).replace(",", " ") }} ₽</td>
+                <td><div class="cell-desc" title="{{ product.description }}">{{ product.description }}</div></td>
+              </tr>
+            {% else %}
+              <tr><td class="table-empty" colspan="5">No products yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Add product{% endblock %}
+
+{% block content %}
+<section class="page">
+  <div class="container add-grid">
+    <div class="glass form-card" data-reveal="blur">
+      <p class="eyebrow">Inventory</p>
+      <h1 class="display">Add a <em>new piece</em></h1>
+      <p class="lead">Fill in the card below — the preview updates as you type.</p>
+
+      <form class="form-grid" method="POST" data-product-form data-loading>
+        <div class="field span-2">
+          <input class="field-input" id="pic" type="text" name="pic" placeholder=" " inputmode="url" required>
+          <label class="field-label" for="pic">Image link (URL)</label>
+          <svg class="field-icon"><use href="#i-image"/></svg>
+          <span class="field-line"></span>
+        </div>
+        <div class="field span-2">
+          <input class="field-input" id="product" type="text" name="product" placeholder=" " required>
+          <label class="field-label" for="product">Product name</label>
+          <svg class="field-icon"><use href="#i-tag"/></svg>
+          <span class="field-line"></span>
+        </div>
+        <div class="field">
+          <input class="field-input" id="amount" type="number" name="amount" placeholder=" " min="0" step="1" inputmode="numeric" required>
+          <label class="field-label" for="amount">Quantity</label>
+          <svg class="field-icon"><use href="#i-box"/></svg>
+          <span class="field-line"></span>
+        </div>
+        <div class="field">
+          <input class="field-input" id="price" type="number" name="price" placeholder=" " min="0" step="1" inputmode="numeric" required>
+          <label class="field-label" for="price">Price, ₽</label>
+          <svg class="field-icon"><use href="#i-coin"/></svg>
+          <span class="field-line"></span>
+        </div>
+        <div class="field field--area span-2">
+          <textarea class="field-input" id="description" name="description" placeholder=" " rows="4" required></textarea>
+          <label class="field-label" for="description">Description</label>
+          <svg class="field-icon"><use href="#i-text"/></svg>
+          <span class="field-line"></span>
+        </div>
+        <button class="btn btn--gold btn--block span-2" type="submit">Add product <svg><use href="#i-arrow"/></svg></button>
+      </form>
+
+      <p class="form-note">All fields are required</p>
+      <p class="form-back"><a class="link" href="{{ url_for('show_products') }}">Back to the collection <svg><use href="#i-arrow"/></svg></a></p>
+    </div>
+
+    <aside class="preview" data-reveal="right" aria-label="Live preview">
+      <p class="eyebrow preview-label">Live preview</p>
+      <article class="product-card" data-preview>
+        <div class="product-media is-empty">
+          <div class="product-placeholder"><svg><use href="#logo-mark"/></svg></div>
+          <img alt="">
+          <span class="badge product-stock" data-preview-stock>0 in stock</span>
+        </div>
+        <div class="product-body">
+          <h3 class="product-name" data-preview-name>Product name</h3>
+          <p class="product-desc" data-preview-desc>A short, elegant description of the piece.</p>
+          <div class="product-foot">
+            <span class="product-price"><span data-preview-price>0</span><small>₽</small></span>
+            <span class="btn btn--ghost btn--sm">Add to cart</span>
+          </div>
+        </div>
+      </article>
+    </aside>
+  </div>
+</section>
+{% endblock %}
